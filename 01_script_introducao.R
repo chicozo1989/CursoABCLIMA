@@ -164,7 +164,8 @@ args(round)
 
 # Voltando à criação de objetos, é possível inserir um arquivo de banco de dados pré-organizado 
 #Formatos como csv, txt ou xlsx podem ser lidos mediante aplicação de funções específicas,
-#Primeiro passo é informar um diretório para buscar o arquivo
+#Primeiro passo é informar um diretório para buscar o arquivo, neste caso, adicione o endereço de onde está a pasta com seus dados
+#-> Observe que a barra é invertida
 setwd("C:/Users/franc/OneDrive/Documents/CURSO - ABCLIMA")
 
 #Agora aplicamos a função 'read.csv' para abrirmos o arquivo
@@ -249,6 +250,14 @@ class(natal$Date)
 #A coluna Date está no formato character, precisaremos trocar seu formato
 natal$Date=as.Date(natal$Date,"%m/%d/%Y")
 
+#Caso esteja trabalhando com dados horários será preciso transformar a coluna com outro código
+# observe, neste caso, a data estará no formato Ano/Mês/Dia Hora:Minuto, caso seu arquivo esteja com outra ordem apenas troque o código
+#Observe o argumento "tz" ele posiciona a timezone, no meu caso "Fortaleza"
+data$Datetime <- as.POSIXct(data$Datetime,
+                                    format = "%Y-%m-%dT%H:%M",
+                                    tz = "America/Fortaleza")
+
+
 #Agora sim, podemos criar um coluna com dias da semana
 natal$wday=wday(natal$Date)
 natal$Mes=month(natal$Date)
@@ -263,7 +272,7 @@ library(plyr)
 ##Esta função gerará sumariza as variáveis de acordo com três variáveis,municipio, ano e mês
 data2 <- ddply(natal, c("mun_nome", "Ano", "Mes"), summarise,precipitacao_mm = sum(precipitacao_mmdia, na.rm=TRUE),
                                       temperatura_c = mean(temperatura_c, na.rm=TRUE))
-
+Sys.timezone()
 
 #5. Medidas de Dispersão-----------------------------------------------------------------
 
